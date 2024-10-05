@@ -1,8 +1,17 @@
+import { Header } from "widgets/Header";
+import AppRouter from "./router/AppRouter";
+import { BrowserRouter as Router } from "react-router-dom";
+
 function App() {
     return (
-        <>
-            <div className='font-bold'>Hello Vite</div>
-        </>
+        <Router>
+            <div className='font-rubik'>
+                <Header />
+                <div>
+                    <AppRouter />
+                </div>
+            </div>
+        </Router>
     );
 }
 
