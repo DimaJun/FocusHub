@@ -9,9 +9,9 @@ interface TaskProps {
 function Task({ task, index }: TaskProps) {
     return (
         <Draggable draggableId={task.id} index={index}>
-            {provided => (
+            {(provided, snapshot) => (
                 <div 
-                  className='p-2 border rounded'
+                  className={`p-2 border rounded ${snapshot.isDragging && 'bg-purple-300'}`}
                   {...provided.dragHandleProps}
                   {...provided.draggableProps}
                   ref={provided.innerRef}
