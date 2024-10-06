@@ -11,6 +11,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@hello-pangea/dnd": "^17.0.0",
         "@heroicons/react": "^2.1.5",
         "nanoid": "^5.0.7",
         "react": "^18.3.1",

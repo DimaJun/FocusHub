@@ -16,6 +16,7 @@ type Store = {
     columns: Column[];
     addColumn: (name: string) => void;
     addTask: (content: string, columnId: string) => void;
+    moveTask: (sourceColumnId: string, destinationColumnId: string, sourceIndex: number, destinationIndex: number) => void;
 };
 
 const useUserTasksStore = create<Store>()(set => ({
@@ -30,7 +31,47 @@ const useUserTasksStore = create<Store>()(set => ({
         ? {...col, tasks: [...col.tasks, {id: nanoid(8), content}]}
         : col
        ) 
-    }))
+    })),
+    moveTask: (sourceColumnId, destinationColumnId, sourceIndex, destinationIndex) => 
+        set(state => {
+            const sourceColumn = state.columns.find(col => col.id === sourceColumnId);
+            const destinationColumn = state.columns.find(col => col.id === destinationColumnId);
+
+            if(!sourceColumn || !destinationColumn) return state;
+
+            if(sourceColumnId === destinationColumnId) {
+                const updatedTasks = [...sourceColumn.tasks];
+                const [movedTask] = updatedTasks.splice(sourceIndex, 1);
+                updatedTasks.splice(destinationIndex, 0, movedTask);
+
+                return {
+                    columns: state.columns.map(col => 
+                        col.id === sourceColumnId
+                        ? {...col, tasks: updatedTasks}
+                        : col
+                    )
+                }
+            } else {
+                const sourceTasks = [...sourceColumn.tasks];
+                const destinationTasks = [...destinationColumn.tasks];
+
+                const [movedTask] = sourceTasks.splice(sourceIndex, 1);
+
+                destinationTasks.splice(destinationIndex, 0, movedTask);
+
+                return {
+                    columns: state.columns.map(col => {
+                        if(col.id === sourceColumnId) {
+                            return {...col, tasks: sourceTasks}
+                        }
+                        if(col.id === destinationColumnId) {
+                            return {...col, tasks: destinationTasks}
+                        }
+                        return col;
+                    })
+                }
+            }
+        })
 }));
 
 export { useUserTasksStore };
