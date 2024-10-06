@@ -9,3 +9,7 @@ html, body {
 #root {
     height: 100%;
 }
+
+* {
+    scrollbar-width: thin;
+}

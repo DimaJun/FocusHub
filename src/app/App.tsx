@@ -5,9 +5,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 function App() {
     return (
         <Router>
-            <div className='font-rubik h-full grid grid-rows-[42.5px_1fr]'>
+            <div className='font-rubik h-full grid grid-rows-[42.5px_1fr] overflow-x-hidden'>
                 <Header />
-                <div className="p-3">
+                <div className="p-3 overflow-x-auto">
                     <AppRouter />
                 </div>
             </div>
