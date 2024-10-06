@@ -15,6 +15,7 @@ export interface Task {
 type Store = {
     columns: Column[];
     addColumn: (name: string) => void;
+    addTask: (content: string, columnId: string) => void;
 };
 
 const useUserTasksStore = create<Store>()(set => ({
@@ -23,6 +24,13 @@ const useUserTasksStore = create<Store>()(set => ({
         set(state => ({
             columns: [...state.columns, { id: nanoid(6), name, tasks: [] }],
         })),
+    addTask: (content, columnId) => set(state => ({
+       columns: state.columns.map(col => 
+        col.id === columnId
+        ? {...col, tasks: [...col.tasks, {id: nanoid(8), content}]}
+        : col
+       ) 
+    }))
 }));
 
 export { useUserTasksStore };

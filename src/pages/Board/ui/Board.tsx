@@ -11,17 +11,13 @@ function Board() {
 
     const { columns, addColumn } = useUserTasksStore();
 
-    const handleAddColumn = (name: string) => {
-        if (name.trim()) {
-            addColumn(name);
-            setColumnName('');
-            setIsColumnAdd(false);
-        }
-    };
-
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            handleAddColumn(columnName);
+            if (columnName.trim()) {
+                addColumn(columnName);
+                setColumnName('');
+                setIsColumnAdd(false);
+            }
         }
     };
 
@@ -58,6 +54,7 @@ function Board() {
                     key={column.id}
                     columnName={column.name}
                     tasks={column.tasks}
+                    columnId={column.id}
                 />
             ))}
         </div>
