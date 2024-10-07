@@ -8,9 +8,12 @@ function Header() {
                 <NavLink to={'/'} className='font-bold text-2xl mr-6'>
                     FocusHub
                 </NavLink>
-                <NavLink to={'/board'} className='flex items-center gap-x-1 hover:text-gray-100 duration-300'>
-                  <ClipboardIcon className='text-xl' width={24}/>
-                  Board
+                <NavLink
+                    to={'/board'}
+                    className='flex items-center gap-x-1 hover:text-gray-100 duration-300'
+                >
+                    <ClipboardIcon className='text-xl' width={24} />
+                    Board
                 </NavLink>
             </nav>
         </header>

@@ -36,7 +36,9 @@ function Column({ tasks, columnName, columnId }: ColumnProps) {
     return (
         <div className='max-w-[300px] w-[300px] flex-grow flex-shrink-0 border rounded h-full'>
             <div className='flex items-center justify-between p-3 border-b-2'>
-                <h2 className='font-medium text-xl'>{columnName} ({tasks.length})</h2>
+                <h2 className='font-medium text-xl'>
+                    {columnName} ({tasks.length})
+                </h2>
                 <button onClick={() => setIsTaskAdd(true)}>
                     <PlusIcon width={24} />
                 </button>

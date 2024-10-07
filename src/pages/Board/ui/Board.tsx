@@ -3,6 +3,7 @@ import { PlusIcon } from '@heroicons/react/24/solid';
 import { useUserTasksStore } from 'app/store/userTasksStore';
 import { useEffect, useRef, useState } from 'react';
 import Column from './components/Column';
+import Sidebar from './components/Sidebar';
 
 function Board() {
     const [isColumnAdd, setIsColumnAdd] = useState(false);
@@ -10,7 +11,7 @@ function Board() {
 
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const { columns, addColumn, moveTask } = useUserTasksStore();
+    const { columns, addColumn, moveTask, selectedTask } = useUserTasksStore();
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -45,7 +46,8 @@ function Board() {
         if (isColumnAdd) {
             inputRef.current?.focus();
         }
-    }, [isColumnAdd]);
+        console.log(selectedTask);
+    }, [isColumnAdd, selectedTask]);
 
     return (
         <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -59,7 +61,7 @@ function Board() {
                 {isColumnAdd && (
                     <input
                         ref={inputRef}
-                        className='border h-10 max-w-[200px] w-full p-2 text-gray-500 rounded'
+                        className='border h-10 max-w-[200px] min-w-[200px] p-2 text-gray-500 rounded'
                         type='text'
                         value={columnName}
                         onChange={e => setColumnName(e.target.value)}
@@ -79,6 +81,7 @@ function Board() {
                     />
                 ))}
             </div>
+            <Sidebar task={selectedTask} />
         </DragDropContext>
     );
 }
