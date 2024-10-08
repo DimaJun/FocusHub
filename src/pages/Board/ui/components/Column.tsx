@@ -13,9 +13,12 @@ interface ColumnProps {
 function Column({ tasks, columnName, columnId }: ColumnProps) {
     const [isTaskAdd, setIsTaskAdd] = useState(false);
     const [taskName, setTaskName] = useState<string>('');
+    const [newColumnName, setNewColumnName] = useState(columnName);
+    const [isColumnUpdate, setIsColumnUpdate] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const colRef = useRef<HTMLInputElement>(null);
 
-    const { addTask } = useUserTasksStore();
+    const { addTask, updateColumn } = useUserTasksStore();
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -27,21 +30,56 @@ function Column({ tasks, columnName, columnId }: ColumnProps) {
         }
     };
 
+    const changeColumnName = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            if (newColumnName.trim()) {
+                updateColumn(columnId, newColumnName);
+                setNewColumnName(newColumnName);
+                setIsColumnUpdate(false);
+            }
+        }
+    };
+
     useEffect(() => {
         if (isTaskAdd) {
             inputRef.current?.focus();
         }
-    }, [isTaskAdd]);
+        if (isColumnUpdate) {
+            colRef.current?.focus();
+        }
+    }, [isTaskAdd, isColumnUpdate]);
 
     return (
         <div className='max-w-[300px] w-[300px] flex-grow flex-shrink-0 border rounded h-full'>
             <div className='flex items-center justify-between p-3 border-b-2'>
-                <h2 className='font-medium text-xl'>
-                    {columnName} ({tasks.length})
-                </h2>
-                <button onClick={() => setIsTaskAdd(true)}>
-                    <PlusIcon width={24} />
-                </button>
+                {isColumnUpdate ? (
+                    <>
+                        <input
+                            ref={colRef}
+                            className='border h-10 max-w-[200px] min-w-[200px] p-2 text-gray-500 rounded'
+                            type='text'
+                            value={newColumnName}
+                            onChange={e => setNewColumnName(e.target.value)}
+                            onBlur={() => setIsColumnUpdate(false)}
+                            onKeyDown={e => changeColumnName(e)}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <h2
+                            onClick={() => {
+                                setIsColumnUpdate(true);
+                                setNewColumnName(newColumnName);
+                            }}
+                            className='font-medium text-xl'
+                        >
+                            {columnName} ({tasks.length})
+                        </h2>
+                        <button onClick={() => setIsTaskAdd(true)}>
+                            <PlusIcon width={24} />
+                        </button>
+                    </>
+                )}
             </div>
             <Droppable droppableId={columnId}>
                 {provided => (

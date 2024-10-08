@@ -27,6 +27,7 @@ type Store = {
     selectTask: (task: Task | null) => void;
     setIsTaskEdit: (value: boolean) => void;
     addColumn: (name: string) => void;
+    updateColumn: (columnId: string, newName: string) => void;
     addTask: (content: string, columnId: string) => void;
     updateTask: (
         taskId: string,
@@ -50,6 +51,12 @@ const useUserTasksStore = create<Store>()(set => ({
     addColumn: name =>
         set(state => ({
             columns: [...state.columns, { id: nanoid(6), name, tasks: [] }],
+        })),
+    updateColumn: (columnId, newName) =>
+        set(state => ({
+            columns: state.columns.map(col =>
+                col.id === columnId ? { ...col, name: newName } : col,
+            ),
         })),
     addTask: (content, columnId) =>
         set(state => ({
