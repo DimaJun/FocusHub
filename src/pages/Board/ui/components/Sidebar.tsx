@@ -1,4 +1,8 @@
-import { Task, useUserTasksStore } from 'app/store/userTasksStore';
+import {
+    Task,
+    TaskPriority,
+    useUserTasksStore,
+} from 'app/store/userTasksStore';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 interface SidebarProps {
@@ -8,12 +12,14 @@ interface SidebarProps {
 interface FormData {
     id: string | '';
     content: string | '';
+    priority: TaskPriority;
 }
 
 function Sidebar({ task }: SidebarProps) {
     const [formData, setFormData] = useState<FormData>({
         id: '',
         content: '',
+        priority: TaskPriority.NONE,
     });
 
     const { isTaskEdit, setIsTaskEdit, updateTask } = useUserTasksStore();
@@ -23,16 +29,21 @@ function Sidebar({ task }: SidebarProps) {
             setFormData({
                 id: task.id,
                 content: task.content,
+                priority:
+                    task.priority !== TaskPriority.NONE
+                        ? task.priority
+                        : TaskPriority.NONE,
             });
         } else {
             setFormData({
                 id: '',
                 content: '',
+                priority: TaskPriority.NONE,
             });
         }
     }, [task]);
 
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData(() => ({
             ...formData,
             [e.target.name]: e.target.value,
@@ -42,10 +53,11 @@ function Sidebar({ task }: SidebarProps) {
     const onSave = () => {
         if (formData.content.trim()) {
             if (task) {
-                updateTask(task.id, formData.content.trim());
+                updateTask(task.id, formData.content.trim(), formData.priority);
                 setFormData({
                     id: '',
                     content: '',
+                    priority: TaskPriority.NONE,
                 });
                 setIsTaskEdit(false);
             }
@@ -71,6 +83,23 @@ function Sidebar({ task }: SidebarProps) {
                                 value={formData.content}
                                 onChange={e => onChange(e)}
                             />
+                        </label>
+                        <label className='flex flex-col' htmlFor='priorityS'>
+                            Priority
+                            <select
+                                className='p-2 border bg-purple-100 rounded'
+                                name='priority'
+                                id='priorityS'
+                                value={formData.priority}
+                                onChange={e => onChange(e)}
+                            >
+                                <option value={TaskPriority.NONE}>none</option>
+                                <option value={TaskPriority.LOW}>Low</option>
+                                <option value={TaskPriority.MEDIUM}>
+                                    Medium
+                                </option>
+                                <option value={TaskPriority.HIGH}>High</option>
+                            </select>
                         </label>
                         <div className='mt-2 flex gap-x-2'>
                             <button

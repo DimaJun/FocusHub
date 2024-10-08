@@ -1,6 +1,13 @@
 import { nanoid } from 'nanoid';
 import { create } from 'zustand';
 
+export enum TaskPriority {
+    NONE = 'none',
+    LOW = 'low',
+    MEDIUM = 'medium',
+    HIGH = 'high',
+}
+
 export interface Column {
     id: string;
     name: string;
@@ -10,6 +17,7 @@ export interface Column {
 export interface Task {
     id: string;
     content: string;
+    priority: TaskPriority;
 }
 
 type Store = {
@@ -20,7 +28,11 @@ type Store = {
     setIsTaskEdit: (value: boolean) => void;
     addColumn: (name: string) => void;
     addTask: (content: string, columnId: string) => void;
-    updateTask: (taskId: string, content: string) => void;
+    updateTask: (
+        taskId: string,
+        content: string,
+        priority: TaskPriority,
+    ) => void;
     moveTask: (
         sourceColumnId: string,
         destinationColumnId: string,
@@ -45,12 +57,19 @@ const useUserTasksStore = create<Store>()(set => ({
                 col.id === columnId
                     ? {
                           ...col,
-                          tasks: [...col.tasks, { id: nanoid(8), content }],
+                          tasks: [
+                              ...col.tasks,
+                              {
+                                  id: nanoid(8),
+                                  content,
+                                  priority: TaskPriority.NONE,
+                              },
+                          ],
                       }
                     : col,
             ),
         })),
-    updateTask: (taskId, content) =>
+    updateTask: (taskId, content, priority) =>
         set(state => {
             return {
                 columns: state.columns.map(col => {
@@ -62,7 +81,9 @@ const useUserTasksStore = create<Store>()(set => ({
                     }
 
                     const updatedTasks = col.tasks.map((task, index) =>
-                        index === taskIndex ? { ...task, content } : task,
+                        index === taskIndex
+                            ? { ...task, content, priority }
+                            : task,
                     );
 
                     return { ...col, tasks: updatedTasks };
