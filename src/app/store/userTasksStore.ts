@@ -20,6 +20,7 @@ type Store = {
     setIsTaskEdit: (value: boolean) => void;
     addColumn: (name: string) => void;
     addTask: (content: string, columnId: string) => void;
+    updateTask: (taskId: string, content: string) => void;
     moveTask: (
         sourceColumnId: string,
         destinationColumnId: string,
@@ -49,6 +50,25 @@ const useUserTasksStore = create<Store>()(set => ({
                     : col,
             ),
         })),
+    updateTask: (taskId, content) =>
+        set(state => {
+            return {
+                columns: state.columns.map(col => {
+                    const taskIndex = col.tasks.findIndex(
+                        task => task.id === taskId,
+                    );
+                    if (taskIndex === -1) {
+                        return { ...col };
+                    }
+
+                    const updatedTasks = col.tasks.map((task, index) =>
+                        index === taskIndex ? { ...task, content } : task,
+                    );
+
+                    return { ...col, tasks: updatedTasks };
+                }),
+            };
+        }),
     moveTask: (
         sourceColumnId,
         destinationColumnId,

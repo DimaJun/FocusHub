@@ -16,7 +16,7 @@ function Sidebar({ task }: SidebarProps) {
         content: '',
     });
 
-    const { isTaskEdit } = useUserTasksStore();
+    const { isTaskEdit, setIsTaskEdit, updateTask } = useUserTasksStore();
 
     useEffect(() => {
         if (task) {
@@ -37,6 +37,19 @@ function Sidebar({ task }: SidebarProps) {
             ...formData,
             [e.target.name]: e.target.value,
         }));
+    };
+
+    const onSave = () => {
+        if (formData.content.trim()) {
+            if (task) {
+                updateTask(task.id, formData.content.trim());
+                setFormData({
+                    id: '',
+                    content: '',
+                });
+                setIsTaskEdit(false);
+            }
+        }
     };
 
     return (
@@ -63,12 +76,14 @@ function Sidebar({ task }: SidebarProps) {
                             <button
                                 type='button'
                                 className='p-2 bg-purple-800 rounded font-medium text-white active:bg-purple-700'
+                                onClick={onSave}
                             >
                                 Save
                             </button>
                             <button
                                 type='button'
                                 className='p-2 bg-purple-800 rounded font-medium text-white active:bg-purple-700'
+                                onClick={() => setIsTaskEdit(false)}
                             >
                                 Cancel
                             </button>
