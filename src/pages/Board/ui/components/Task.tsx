@@ -22,13 +22,13 @@ function Task({ task, index }: TaskProps) {
     const switchPriority = () => {
         switch (task.priority) {
             case TaskPriority.LOW:
-                return 'bg-sky-300';
+                return 'border-sky-500 border-2';
             case TaskPriority.MEDIUM:
-                return 'bg-orange-500';
+                return 'border-orange-500 border-2';
             case TaskPriority.HIGH:
-                return 'bg-red-600';
+                return 'border-red-500 border-2';
             case TaskPriority.NONE:
-                return 'bg-white';
+                return '';
         }
     };
 
@@ -36,7 +36,7 @@ function Task({ task, index }: TaskProps) {
         <Draggable draggableId={task.id} index={index}>
             {(provided, snapshot) => (
                 <div
-                    className={`p-2 border rounded ${snapshot.isDragging && 'bg-purple-300'} ${switchPriority()}`}
+                    className={`p-2 border rounded ${switchPriority()} ${snapshot.isDragging && 'bg-purple-300'} duration-0`}
                     {...provided.dragHandleProps}
                     {...provided.draggableProps}
                     ref={provided.innerRef}
