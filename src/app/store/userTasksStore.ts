@@ -29,6 +29,7 @@ type Store = {
     addColumn: (name: string) => void;
     updateColumn: (columnId: string, newName: string) => void;
     addTask: (content: string, columnId: string) => void;
+    removeTask: (taskId: string) => void;
     updateTask: (
         taskId: string,
         content: string,
@@ -76,6 +77,12 @@ const useUserTasksStore = create<Store>()(set => ({
                     : col,
             ),
         })),
+    removeTask: (taskId) => set(state => ({
+            columns: state.columns.map(col => ({
+                ...col,
+                tasks: col.tasks.filter(task => task.id !== taskId)
+            }))
+    })),
     updateTask: (taskId, content, priority) =>
         set(state => {
             return {

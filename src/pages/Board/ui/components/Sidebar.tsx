@@ -22,7 +22,7 @@ function Sidebar({ task }: SidebarProps) {
         priority: TaskPriority.NONE,
     });
 
-    const { isTaskEdit, setIsTaskEdit, updateTask } = useUserTasksStore();
+    const { isTaskEdit, setIsTaskEdit, updateTask, removeTask } = useUserTasksStore();
 
     useEffect(() => {
         if (task) {
@@ -70,8 +70,25 @@ function Sidebar({ task }: SidebarProps) {
         >
             {task && (
                 <>
-                    <p className='text-xl w-fit'>Task</p>
-                    <span className='text-gray-100 '>#{formData.id}</span>
+                    <div className='flex items-center justify-between'>
+                        <p className='text-xl w-fit'>Task <span className='text-gray-100 text-sm'>#{formData.id}</span></p>
+                        <button
+                            className='p-1 rounded text-white bg-red-400'
+                            onClick={() => {
+                                if(confirm(`Are you sure to delete #${task.id} task?`)) {
+                                    removeTask(task.id);
+                                    setFormData({
+                                        id: '',
+                                        content: '',
+                                        priority: TaskPriority.NONE
+                                    })
+                                    setIsTaskEdit(false);
+                                }
+                            }}
+                        >
+                            Delete
+                        </button>
+                    </div>
                     <form className='mt-2' onSubmit={e => e.preventDefault()}>
                         <label className='flex flex-col' htmlFor='contentI'>
                             Content
