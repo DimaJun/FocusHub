@@ -72,7 +72,7 @@ function Sidebar({ task }: SidebarProps) {
                 <>
                     <p className='text-xl w-fit'>Task</p>
                     <span className='text-gray-100 '>#{formData.id}</span>
-                    <form className='mt-2'>
+                    <form className='mt-2' onSubmit={(e) => e.preventDefault()}>
                         <label className='flex flex-col' htmlFor='contentI'>
                             Content
                             <input
